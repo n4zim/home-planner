@@ -1,15 +1,5 @@
+const fs = require("fs"), path = require("path")
 
-const index = "<html>"
-  + "<head>"
-  + "<title>Server</title>"
-  + "</head>"
-  + "<body>"
-  + "<div id='root'></div>"
-  + "<script src='/_bundle.js'></script>"
-  + "</body>"
-  + "</html>"
-
-const bundle = require("fs").readFileSync("./build/client.js", "utf8")
 const handlers = require("./build/server").default
 
 require("http").createServer(async (req, res) => {
@@ -46,12 +36,37 @@ require("http").createServer(async (req, res) => {
   } else if(req.method === "GET") {
     if(req.url === "/_bundle.js") {
       res.writeHead(200, { "Content-Type": "application/javascript" })
-      res.end(bundle)
-    } else {
-      res.writeHead(200, { "Content-Type": "text/html" })
-      res.end(index)
+      fs.createReadStream("./build/client.js").pipe(res)
+      return
     }
-    return
+    const file = __dirname + "/public" + (
+      (!req.url || req.url === "/")
+        ? "/index.html"
+        : path.normalize(req.url)
+    )
+    if(fs.existsSync(file) && fs.statSync(file).isFile()) {
+      const type = {
+        "html": "text/html",
+        "css": "text/css",
+        "js": "application/javascript",
+        "json": "application/json",
+        "png": "image/png",
+        "jpg": "image/jpeg",
+        "jpeg": "image/jpeg",
+        "gif": "image/gif",
+        "svg": "image/svg+xml",
+        "ico": "image/x-icon",
+        "webp": "image/webp",
+        "woff": "font/woff",
+        "woff2": "font/woff2",
+        "ttf": "font/ttf",
+        "otf": "font/otf",
+        "eot": "font/eot"
+      }[file.split(".").pop()] || "text/plain"
+      res.writeHead(200, { "Content-Type": type })
+      fs.createReadStream(file).pipe(res)
+      return
+    }
   }
   res.writeHead(404)
   res.end()
