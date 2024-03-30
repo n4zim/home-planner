@@ -1,0 +1,20 @@
+{
+  "name": "home-planner",
+  "version": "1.0.0",
+  "repository": "git@github.com:n4zim/home-planner.git",
+  "author": "Nazim Lachter <nazim@blueforest.cc>",
+  "scripts": {
+    "build": "node ./esbuild.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "@types/react": "^18.2.73",
+    "@types/react-dom": "^18.2.23",
+    "esbuild": "^0.20.2",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

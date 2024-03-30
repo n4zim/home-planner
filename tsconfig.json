@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "NodeNext",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"],
+    "paths": {
+      "*": ["./src/common/*.d.ts"]
+    },
+    "strict": true,
+    "skipLibCheck": true,
+    "moduleResolution": "NodeNext",
+    "jsx": "react",
+  }
+}
