@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-const fs = require('fs'), esbuild = require('esbuild')
+const esbuild = require('esbuild'), fs = require('fs'), http = require(".")
+
+const mode = process.argv[2] || "start"
 
 ;(async () => {
-  const mode = process.argv[2] || "start"
-
   const client = await esbuild.context({
     entryPoints: ["./build/.src/client/index.tsx"],
     minify: true,
@@ -20,41 +20,91 @@ const fs = require('fs'), esbuild = require('esbuild')
     bundle: true,
   })
 
-  const wrapped = copySource(true)
+  if(fs.existsSync('./build')) fs.rmSync('./build', { recursive: true })
+  fs.mkdirSync('./build')
+
+  await buildAll(client, server)
+
+  if(mode === "start") {
+    console.log("Initial build done, starting server...")
+    const { start, stop } = http()
+    await start()
+    fs.watch('./src', { recursive: true }, async (event, file) => {
+      // TODO: parallel builds
+      switch(file.split('/')[0]) {
+        case "client":
+          await buildClient(client)
+          break
+        case "server":
+          await stop()
+          await buildServer(server)
+          await start()
+          break
+        default:
+          await stop()
+          await buildAll(client, server)
+          await start()
+      }
+    })
+  } else if(mode === "build") {
+    await client.dispose()
+    await server.dispose()
+  } else {
+    console.error("Unknown mode:", mode)
+  }
+})()
+
+async function buildAll(client, server) {
+  const handlers = copySourceDir('./src', [])
 
   await client.rebuild()
-  await client.dispose()
 
   fs.rmSync('./build/.src/client', { recursive: true })
   fs.rmSync('./build/.src/server', { recursive: true })
   copySourceDir('./src/server')
 
+  writeHandlers(handlers)
+
+  await server.rebuild()
+
+  cleanSourceDir()
+}
+
+async function buildServer(context) {
+  const handlers = copySourceDir('./src', []) // TODO: optimize this
+  cleanSourceDir()
+
+  copySourceDir('./src/server')
+  copySourceDir('./src/types')
+
+  writeHandlers(handlers)
+
+  await context.rebuild()
+  cleanSourceDir()
+}
+
+async function buildClient(context) {
+  copySourceDir('./src', [])
+  await context.rebuild()
+  cleanSourceDir()
+}
+
+function writeHandlers(handlers) {
   fs.writeFileSync(
     './build/.src/handlers.ts',
     `export default {${
-      wrapped.map(key => {
+      handlers.map(key => {
         return `${key}: require('./server/${key}').default`
       }).join(',')
     }}`
   )
-
-  await server.rebuild()
-  await server.dispose()
-
-  fs.rmSync('./build/.src', { recursive: true })
-})()
-
-function copySource(serverWrapper = false) {
-  if(fs.existsSync('./build')) fs.rmSync('./build', { recursive: true })
-  fs.mkdirSync('./build')
-  return copySourceDir('./src', serverWrapper ? [] : undefined)
 }
 
-function copySourceDir(dir, serverWrapped) {
+function copySourceDir(dir, handlers) {
   for(const entry of fs.readdirSync(dir)) {
     const entryPath = `${dir}/${entry}`
     if(fs.statSync(entryPath).isDirectory()) {
-      copySourceDir(entryPath, serverWrapped)
+      copySourceDir(entryPath, handlers)
     } else {
       const destination = entryPath.replace('/src/', '/build/.src/')
       //console.log(`Copying ${entryPath} to ${destination}...`)
@@ -63,7 +113,7 @@ function copySourceDir(dir, serverWrapped) {
         fs.mkdirSync(destinationDir, { recursive: true })
       }
       const isServer = entryPath.indexOf('/src/server/') !== -1
-      if(Array.isArray(serverWrapped) && isServer) {
+      if(Array.isArray(handlers) && isServer) {
         const file = fs.readFileSync(entryPath, 'utf8')
         const functionName = file.match(/export async function (\w+)/)
         if(functionName) {
@@ -76,7 +126,7 @@ function copySourceDir(dir, serverWrapped) {
               + `  return CallFunction('${functionPath}', params)\n`
               + `}`
           )
-          serverWrapped.push(functionPath)
+          handlers.push(functionPath)
         }
       } else {
         if(isServer) {
@@ -91,5 +141,9 @@ function copySourceDir(dir, serverWrapped) {
       }
     }
   }
-  return serverWrapped
+  return handlers
+}
+
+function cleanSourceDir() {
+  fs.rmSync('./build/.src', { recursive: true })
 }
