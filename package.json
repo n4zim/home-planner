@@ -2,9 +2,11 @@
   "name": "home-planner",
   "version": "1.0.0",
   "repository": "git@github.com:n4zim/home-planner.git",
+  "license": "Apache-2.0",
   "author": "Nazim Lachter <nazim@blueforest.cc>",
   "scripts": {
-    "build": "node ./esbuild.js"
+    "start": "./esbuild.js start",
+    "build": "./esbuild.js build"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",

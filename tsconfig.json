@@ -6,7 +6,7 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
     "paths": {
-      "*": ["./src/common/*.d.ts"]
+      "*": ["./src/types/*.d.ts"]
     },
     "strict": true,
     "skipLibCheck": true,
