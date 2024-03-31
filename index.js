@@ -1,9 +1,8 @@
 const fs = require("fs"), path = require("path")
 
-module.exports = function() {
-  const handlers = require("./build/server").default
-
-  const server = require("http").createServer(async (req, res) => {
+require("http").createServer(async (req, res) => {
+  console.log(new Date(), req.method, req.url)
+  try {
     if(req.url?.startsWith("/_api_/")) {
       if(req.method === "OPTIONS") {
         res.setHeader("Access-Control-Allow-Origin", "*")
@@ -19,16 +18,17 @@ module.exports = function() {
         return
       }
       const name = req.url.split("/").pop()
+      const handlers = require("./build/server").default
       if(handlers[name]) {
         try {
           let body = ""
           for await(const chunk of req) body += chunk
-          console.log("Request", name, body)
+          console.log(new Date(), "Handler call", name, body)
           const response = await handlers[name](JSON.parse(body))
           res.writeHead(200, { "Content-Type": "application/json" })
           res.end(JSON.stringify(response))
         } catch(error) {
-          console.error(error)
+          console.error(new Date(), error)
           res.writeHead(500)
           res.end()
         }
@@ -69,22 +69,11 @@ module.exports = function() {
         return
       }
     }
-    res.writeHead(404)
-    res.end()
-  })
-
-  return {
-    start: () => new Promise(resolve => {
-      server.listen(3000, () => {
-        console.log("Server running on http://localhost:3000")
-        resolve()
-      })
-    }),
-    stop: () => new Promise(resolve => {
-      server.close(() => {
-        console.log("Server stopped")
-        resolve()
-      })
-    })
+  } catch(error) {
+    console.error(new Date(), error)
   }
-}
+  res.writeHead(404)
+  res.end()
+}).listen(3000, () => {
+  console.log(new Date(), "Server running on http://localhost:3000")
+})

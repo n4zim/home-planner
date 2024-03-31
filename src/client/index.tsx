@@ -13,6 +13,15 @@ import { Hello } from './hello'
   return await response.json()
 }
 
+/* DEV_ONLY_START */
+new WebSocket("ws://localhost:2000").onmessage = () => window.location.reload()
+/* DEV_ONLY_END */
 
-const root = document.getElementById("root")
-if(root) ReactDOM.createRoot(root).render(<Hello/>)
+let root = document.getElementById("root")
+if(!root) {
+  root = document.createElement("div")
+  root.id = "root"
+  document.body.appendChild(root)
+}
+
+ReactDOM.createRoot(root).render(<Hello/>)

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-const esbuild = require('esbuild'), fs = require('fs'), http = require(".")
+const SERVER_PATH = './build/server.js'
+
+const esbuild = require('esbuild'), fs = require('fs'), chokidar = require("chokidar")
 
 const mode = process.argv[2] || "start"
 
@@ -15,7 +17,7 @@ const mode = process.argv[2] || "start"
   const server = await esbuild.context({
     entryPoints: ["./build/.src/handlers.ts"],
     minify: true,
-    outfile: "./build/server.js",
+    outfile: SERVER_PATH,
     platform: "node",
     bundle: true,
   })
@@ -26,36 +28,43 @@ const mode = process.argv[2] || "start"
   await buildAll(client, server)
 
   if(mode === "start") {
-    console.log("Initial build done, starting server...")
-    const { start, stop } = http()
-    await start()
-    fs.watch('./src', { recursive: true }, async (event, file) => {
-      // TODO: parallel builds
-      switch(file.split('/')[0]) {
+    const clientReload = startClientReloadServer()
+
+    require(".")
+
+    chokidar.watch('.', {
+      ignoreInitial: true,
+      cwd: './src',
+    }).on('all', async (event, path) => {
+      const split = path.split('/')
+      switch(split[0]) {
         case "client":
           await buildClient(client)
+          console.log(new Date(), "Client rebuilt")
+          clientReload()
           break
         case "server":
-          await stop()
           await buildServer(server)
-          await start()
+          delete require.cache[require.resolve(SERVER_PATH)]
+          console.log(new Date(), "Server rebuilt")
           break
         default:
-          await stop()
           await buildAll(client, server)
-          await start()
+          console.log(new Date(), "Client and server rebuilt")
       }
-    })
+    });
   } else if(mode === "build") {
     await client.dispose()
     await server.dispose()
   } else {
-    console.error("Unknown mode:", mode)
+    console.error(new Date(), "Unknown mode:", mode)
   }
 })()
 
 async function buildAll(client, server) {
   const handlers = copySourceDir('./src', [])
+
+  removeDevCode()
 
   await client.rebuild()
 
@@ -64,6 +73,7 @@ async function buildAll(client, server) {
   copySourceDir('./src/server')
 
   writeHandlers(handlers)
+  removeDevCode()
 
   await server.rebuild()
 
@@ -78,6 +88,7 @@ async function buildServer(context) {
   copySourceDir('./src/types')
 
   writeHandlers(handlers)
+  removeDevCode()
 
   await context.rebuild()
   cleanSourceDir()
@@ -85,6 +96,7 @@ async function buildServer(context) {
 
 async function buildClient(context) {
   copySourceDir('./src', [])
+  removeDevCode()
   await context.rebuild()
   cleanSourceDir()
 }
@@ -98,6 +110,23 @@ function writeHandlers(handlers) {
       }).join(',')
     }}`
   )
+}
+
+function removeDevCode(path = './build/.src') {
+  if(mode === "start") return
+  for(const entry of fs.readdirSync(path)) {
+    const entryPath = `${path}/${entry}`
+    if(fs.statSync(entryPath).isDirectory()) {
+      removeDevCode(entryPath)
+    } else {
+      const content = fs.readFileSync(entryPath, 'utf8')
+      const newContent = content.replace(/\/\* DEV_ONLY_START \*\/[\s\S]*?\/\* DEV_ONLY_END \*\//g, '')
+      if(content !== newContent) {
+        //console.log(new Date(), "Removed dev code from", entryPath, content + "\n", newContent)
+        fs.writeFileSync(entry, newContent)
+      }
+    }
+  }
 }
 
 function copySourceDir(dir, handlers) {
@@ -146,4 +175,21 @@ function copySourceDir(dir, handlers) {
 
 function cleanSourceDir() {
   fs.rmSync('./build/.src', { recursive: true })
+}
+
+function startClientReloadServer() {
+  const server = new (require('ws').Server)({ port: 2000 })
+  const clients = {}
+  server.on('connection', ws => {
+    const id = Math.random().toString(36).slice(2)
+    clients[id] = () => {
+      ws.send()
+      delete clients[id]
+    }
+  })
+  return () => {
+    for(const send of Object.values(clients)) {
+      send()
+    }
+  }
 }
