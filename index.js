@@ -40,34 +40,36 @@ require("http").createServer(async (req, res) => {
         fs.createReadStream("./build/client.js").pipe(res)
         return
       }
-      const file = __dirname + "/public" + (
-        (!req.url || req.url === "/")
+      const isRoot = !req.url || req.url === "/"
+      let file = __dirname + "/public" + (
+        isRoot
           ? "/index.html"
           : path.normalize(req.url)
       )
-      if(fs.existsSync(file) && fs.statSync(file).isFile()) {
-        const type = {
-          "html": "text/html",
-          "css": "text/css",
-          "js": "application/javascript",
-          "json": "application/json",
-          "png": "image/png",
-          "jpg": "image/jpeg",
-          "jpeg": "image/jpeg",
-          "gif": "image/gif",
-          "svg": "image/svg+xml",
-          "ico": "image/x-icon",
-          "webp": "image/webp",
-          "woff": "font/woff",
-          "woff2": "font/woff2",
-          "ttf": "font/ttf",
-          "otf": "font/otf",
-          "eot": "font/eot"
-        }[file.split(".").pop()] || "text/plain"
-        res.writeHead(200, { "Content-Type": type })
-        fs.createReadStream(file).pipe(res)
-        return
+      if(!isRoot && (!fs.existsSync(file) || !fs.statSync(file).isFile())) {
+        file = __dirname + "/public/index.html"
       }
+      const type = {
+        "html": "text/html",
+        "css": "text/css",
+        "js": "application/javascript",
+        "json": "application/json",
+        "png": "image/png",
+        "jpg": "image/jpeg",
+        "jpeg": "image/jpeg",
+        "gif": "image/gif",
+        "svg": "image/svg+xml",
+        "ico": "image/x-icon",
+        "webp": "image/webp",
+        "woff": "font/woff",
+        "woff2": "font/woff2",
+        "ttf": "font/ttf",
+        "otf": "font/otf",
+        "eot": "font/eot"
+      }[file.split(".").pop()] || "text/plain"
+      res.writeHead(200, { "Content-Type": type })
+      fs.createReadStream(file).pipe(res)
+      return
     }
   } catch(error) {
     console.error(new Date(), error)

@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { Hello } from './hello'
+import { App } from './app'
 
 ;(window as any).CallFunction = async function(name: string, params: any) {
   const response = await fetch("/_api_/" + name, {
@@ -24,4 +24,4 @@ if(!root) {
   document.body.appendChild(root)
 }
 
-ReactDOM.createRoot(root).render(<Hello/>)
+ReactDOM.createRoot(root).render(<App/>)
