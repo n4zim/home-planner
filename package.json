@@ -13,6 +13,7 @@
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.23",
+    "@types/uuid": "^9.0.8",
     "@types/ws": "^8.5.10",
     "chokidar": "^3.6.0",
     "esbuild": "^0.20.2",
@@ -22,6 +23,7 @@
   "dependencies": {
     "better-sqlite3": "^9.4.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "uuid": "^9.0.1"
   }
 }
