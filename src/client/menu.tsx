@@ -1,7 +1,7 @@
 import React from 'react'
 import { Section } from './sections'
 
-export function Shopping(props: {
+export function Menu(props: {
   goToSection: (section: Section) => void
 }) {
   return <>
@@ -10,7 +10,5 @@ export function Shopping(props: {
     >
       Back
     </button>
-
-    <h2></h2>
   </>
 }

@@ -1,8 +1,8 @@
 import React from 'react'
 
-export function InventoryCount(props: {
-  barcode: string
+export function Counter(props: {
   value?: number
+  onValueChange: (value: number) => void
 }) {
   const [initialValue, setInitialValue] = React.useState<number>(props.value || 0)
   const [value, setValue] = React.useState<number>(initialValue)
@@ -32,7 +32,7 @@ export function InventoryCount(props: {
     {value !== initialValue && <button
       onClick={() => {
         setInitialValue(value)
-        alert(`Inventory count for ${props.barcode} updated to ${value}`)
+        props.onValueChange(value)
       }}
       style={{ marginTop: 10 }}
     >

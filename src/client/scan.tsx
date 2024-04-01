@@ -2,7 +2,7 @@ import React from 'react'
 import { Section } from './sections'
 import { OpenFoodFactData, getOpenFoodFactData } from './data'
 import { Scanner } from './scanner'
-import { InventoryCount } from './inventoryCount'
+import { Counter } from './counter'
 
 export function Scan(props: {
   goToSection: (section: Section) => void
@@ -34,7 +34,11 @@ export function Scan(props: {
 
       <h3>Inventory</h3>
 
-      <InventoryCount barcode={data.barcode}/>
+      <Counter
+        onValueChange={quantity => {
+          alert(`Quantity updated to ${quantity} for ${data.barcode}`)
+        }}
+      />
 
       <h3>Data</h3>
 

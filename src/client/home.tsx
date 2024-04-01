@@ -6,30 +6,38 @@ export function Home(props: {
 }) {
   return <>
     <button
-      onClick={() => props.goToSection(Section.Inventory)}
-      style={{ marginBottom: 10 }}
+      onClick={() => props.goToSection(Section.Menu)}
+      style={{ marginBottom: 25, fontSize: "2em", marginTop: 25 }}
     >
-      Inventory
+      🍽️ Menu
+    </button>
+
+    <button
+      onClick={() => props.goToSection(Section.Inventory)}
+      style={{ marginBottom: 25, fontSize: "2em" }}
+    >
+      📦 Inventory
     </button>
 
     <button
       onClick={() => props.goToSection(Section.Shopping)}
-      style={{ marginBottom: 10 }}
+      style={{ marginBottom: 25, fontSize: "2em" }}
     >
-      Shopping list
+      🛍️ Shopping
     </button>
 
     <button
       onClick={() => props.goToSection(Section.Recipes)}
-      style={{ marginBottom: 10 }}
+      style={{ marginBottom: 25, fontSize: "2em" }}
     >
-      Recipes
+      🍲 Recipes
     </button>
 
     <button
       onClick={() => props.goToSection(Section.Scan)}
+      style={{ fontSize: "2em" }}
     >
-      Scan products
+      🔎 Scan
     </button>
   </>
 }

@@ -1,6 +1,7 @@
 
 export enum Section {
   Home,
+  Menu,
   Inventory,
   Shopping,
   Recipes,
@@ -10,6 +11,7 @@ export enum Section {
 export function sectionToPath(section: Section) {
   switch(section) {
     case Section.Home: return "/"
+    case Section.Menu: return "/menu"
     case Section.Inventory: return "/inventory"
     case Section.Shopping: return "/shopping"
     case Section.Recipes: return "/recipes"
@@ -21,6 +23,7 @@ export function sectionToPath(section: Section) {
 export function pathToSection(path: string): Section | null {
   switch(path) {
     case "/": return Section.Home
+    case "/menu": return Section.Menu
     case "/inventory": return Section.Inventory
     case "/shopping": return Section.Shopping
     case "/recipes": return Section.Recipes
