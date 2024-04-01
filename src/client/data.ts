@@ -1,5 +1,6 @@
 
 export type OpenFoodFactData = {
+  barcode: string
   name: string
   image?: string
   stores: string[]
@@ -14,6 +15,7 @@ export async function getOpenFoodFactData(barcode: string): Promise<OpenFoodFact
   let data = await response.json()
   if(data?.product) {
     return {
+      barcode,
       name: data.product.product_name_fr
         || data.product.product_name
         || data.product.product_name_en,
