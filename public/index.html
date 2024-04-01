@@ -9,6 +9,9 @@
       html, body, #root {
         height: 100%;
       }
+      body, button {
+        font-size: 1.5em;
+      }
       div {
         display: flex;
         flex-direction: column;
@@ -18,12 +21,14 @@
       button {
         margin-top: 10px;
         padding: 10px;
-        font-size: 16px;
         background-color: #1d8020;
         color: white;
         border: none;
         border-radius: 5px;
         cursor: pointer;
+      }
+      #barcode_reader * {
+        display: block;
       }
     </style>
   </head>
