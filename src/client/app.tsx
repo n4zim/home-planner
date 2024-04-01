@@ -1,6 +1,9 @@
 import React from 'react'
 import { Section, pathToSection, sectionToPath } from './sections'
 import { Home } from './home'
+import { Inventory } from './inventory'
+import { Shopping } from './shopping'
+import { Recipes } from './recipes'
 import { Scan } from './scan'
 
 export function App() {
@@ -20,6 +23,9 @@ export function App() {
   return <>
     <h1>Home Planner</h1>
     {section === Section.Home && <Home goToSection={goToSection}/>}
+    {section === Section.Inventory && <Inventory goToSection={goToSection}/>}
+    {section === Section.Shopping && <Shopping goToSection={goToSection}/>}
+    {section === Section.Recipes && <Recipes goToSection={goToSection}/>}
     {section === Section.Scan && <Scan goToSection={goToSection}/>}
   </>
 }

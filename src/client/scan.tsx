@@ -9,7 +9,6 @@ export function Scan(props: {
 }) {
   const [data, setData] = React.useState<OpenFoodFactData | undefined>()
   return <>
-
     <div style={{ flexDirection: 'row' }}>
       <button
         onClick={() => props.goToSection(Section.Home)}
