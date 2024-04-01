@@ -3,6 +3,10 @@ import { v4 as uuidv4 } from "uuid"
 
 export enum Collection {
   Products = "products",
+  Inventory = "inventory",
+  Ingredients = "ingredients",
+  Recipes = "recipes",
+  Menus = "menus",
 }
 
 let db: any
@@ -19,6 +23,18 @@ export default function DB(collection: Collection) {
 
     if(!tables.includes(Collection.Products)) {
       db.prepare(createTableQuery(Collection.Products)).run()
+    }
+    if(!tables.includes(Collection.Inventory)) {
+      db.prepare(createTableQuery(Collection.Inventory)).run()
+    }
+    if(!tables.includes(Collection.Ingredients)) {
+      db.prepare(createTableQuery(Collection.Ingredients)).run()
+    }
+    if(!tables.includes(Collection.Recipes)) {
+      db.prepare(createTableQuery(Collection.Recipes)).run()
+    }
+    if(!tables.includes(Collection.Menus)) {
+      db.prepare(createTableQuery(Collection.Menus)).run()
     }
   }
 
