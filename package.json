@@ -9,6 +9,7 @@
     "build": "./esbuild.js build"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.9",
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.73",
     "@types/react-dom": "^18.2.23",
@@ -19,6 +20,7 @@
     "ws": "^8.16.0"
   },
   "dependencies": {
+    "better-sqlite3": "^9.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }

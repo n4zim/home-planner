@@ -9,17 +9,19 @@ const mode = process.argv[2] || "start"
 ;(async () => {
   const client = await esbuild.context({
     entryPoints: ["./build/.src/client/index.tsx"],
-    minify: true,
     outfile: "./build/client.js",
     bundle: true,
+    minify: mode !== "start",
+    sourcemap: mode === "start",
   })
 
   const server = await esbuild.context({
     entryPoints: ["./build/.src/handlers.ts"],
-    minify: true,
     outfile: SERVER_PATH,
     platform: "node",
     bundle: true,
+    minify: mode !== "start",
+    sourcemap: mode === "start",
   })
 
   if(fs.existsSync('./build')) fs.rmSync('./build', { recursive: true })
@@ -78,6 +80,8 @@ async function buildAll(client, server) {
   await server.rebuild()
 
   cleanSourceDir()
+
+  copyServerDependencies()
 }
 
 async function buildServer(context) {
@@ -92,6 +96,8 @@ async function buildServer(context) {
 
   await context.rebuild()
   cleanSourceDir()
+
+  copyServerDependencies()
 }
 
 async function buildClient(context) {
@@ -175,6 +181,13 @@ function copySourceDir(dir, handlers) {
 
 function cleanSourceDir() {
   fs.rmSync('./build/.src', { recursive: true })
+}
+
+function copyServerDependencies() {
+  const sqlite3Node = './node_modules/better-sqlite3/build/Release/better_sqlite3.node'
+  if(fs.existsSync(sqlite3Node)) {
+    fs.copyFileSync(sqlite3Node, './build/better_sqlite3.node')
+  }
 }
 
 function startClientReloadServer() {
