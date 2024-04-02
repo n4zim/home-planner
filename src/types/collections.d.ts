@@ -1,25 +1,33 @@
 
-declare interface Product {
+interface Item<Data> {
+  id: string
+  data: Data
+  created_at?: Date
+  updated_at?: Date
+}
+
+declare type Product = Item<{
   barcode: string
   quantity: { amount: number, unit: "g" | "l" | "piece" }
   ingredient?: string
-}
+}>
 
-declare interface Inventory {
+declare type Inventory = Item<{
   product: string
   quantity: number
-}
+}>
 
-declare interface Ingredient {
+declare type Ingredient = Item<{
   name: string
-}
+}>
 
-declare interface Recipe {
+declare type Recipe = Item<{
   name: string
   ingredients: string[]
-}
+}>
 
-declare interface Menu {
+declare type Menu = Item<{
   name: string
   recipes: string[]
-}
+  order: number
+}>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Section, pathToSection, sectionToPath } from './sections'
 import { Home } from './home'
-import { Menu } from './menu'
+import { Menus } from './menus'
 import { Inventory } from './inventory'
 import { Shopping } from './shopping'
 import { Recipes } from './recipes'
@@ -24,7 +24,7 @@ export function App() {
   return <>
     <h1>🏠 Home Planner 📋</h1>
     {section === Section.Home && <Home goToSection={goToSection}/>}
-    {section === Section.Menu && <Menu goToSection={goToSection}/>}
+    {section === Section.Menus && <Menus goToSection={goToSection}/>}
     {section === Section.Inventory && <Inventory goToSection={goToSection}/>}
     {section === Section.Shopping && <Shopping goToSection={goToSection}/>}
     {section === Section.Recipes && <Recipes goToSection={goToSection}/>}

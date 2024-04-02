@@ -49,6 +49,7 @@ export default function DB(collection: Collection) {
     retrieveAll: (sort?: DBSort, limit?: number, page?: number) => {
       const params = Params()
       const query = `SELECT * FROM ${collection}${appendQuery(params, sort, limit, page)}`
+      console.log("[QUERY]", query, params.get())
       return db.prepare(query).all(params.get()).map(convertToItem)
     },
 
@@ -137,7 +138,10 @@ function appendQuery(
 ): string {
   let output = ""
   if(typeof sort !== "undefined") {
-    output += ` ORDER BY ${Object.keys(sort).map(key => `${params.add(key)} ${sort[key]}`).join(", ")}`
+    output += ` ORDER BY ${Object.keys(sort).map(key => {
+      if(key.startsWith("$")) return `${key.slice(1)} ${sort[key]}`
+      return `${params.add(key)} ${sort[key]}`
+    }).join(", ")}`
   }
   if(typeof limit !== "undefined") {
     output += ` LIMIT ${params.add(limit)}`

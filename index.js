@@ -17,16 +17,16 @@ require("http").createServer(async (req, res) => {
         res.end()
         return
       }
-      const name = req.url.split("/").pop()
+      const name = req.url.slice(7)
       const handlers = require("./build/server").default
       if(handlers[name]) {
         try {
           let body = ""
           for await(const chunk of req) body += chunk
           console.log(new Date(), "Handler call", name, body)
-          const response = await handlers[name](JSON.parse(body))
+          const response = await handlers[name](body ? JSON.parse(body) : {})
           res.writeHead(200, { "Content-Type": "application/json" })
-          res.end(JSON.stringify(response))
+          res.end(response ? JSON.stringify(response) : "{}")
         } catch(error) {
           console.error(new Date(), error)
           res.writeHead(500)

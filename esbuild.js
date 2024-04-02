@@ -6,6 +6,8 @@ const esbuild = require('esbuild'), fs = require('fs'), chokidar = require("chok
 
 const mode = process.argv[2] || "start"
 
+let isBuilding = false, mustRebuild = false
+
 ;(async () => {
   const client = await esbuild.context({
     entryPoints: ["./build/.src/client/index.tsx"],
@@ -38,6 +40,11 @@ const mode = process.argv[2] || "start"
       ignoreInitial: true,
       cwd: './src',
     }).on('all', async (event, path) => {
+      if(isBuilding) {
+        mustRebuild = true
+        return
+      }
+      isBuilding = true
       const split = path.split('/')
       switch(split[0]) {
         case "client":
@@ -54,7 +61,12 @@ const mode = process.argv[2] || "start"
           await buildAll(client, server)
           console.log(new Date(), "Client and server rebuilt")
       }
-    });
+      isBuilding = false
+      if(mustRebuild) {
+        mustRebuild = false
+        chokidar.emit('all', 'rebuild')
+      }
+    })
   } else if(mode === "build") {
     await client.dispose()
     await server.dispose()
@@ -112,7 +124,7 @@ function writeHandlers(handlers) {
     './build/.src/handlers.ts',
     `export default {${
       handlers.map(key => {
-        return `${key}: require('./server/${key}').default`
+        return `"${key}": require('./server/${key}').default`
       }).join(',')
     }}`
   )

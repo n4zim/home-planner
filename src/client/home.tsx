@@ -6,10 +6,10 @@ export function Home(props: {
 }) {
   return <>
     <button
-      onClick={() => props.goToSection(Section.Menu)}
+      onClick={() => props.goToSection(Section.Menus)}
       style={{ marginBottom: 25, fontSize: "2em", marginTop: 25 }}
     >
-      🍽️ Menu
+      🍽️ Menus
     </button>
 
     <button
