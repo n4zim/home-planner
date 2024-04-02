@@ -24,10 +24,10 @@ declare type Ingredient = Item<{
 declare type Recipe = Item<{
   name: string
   ingredients: string[]
+  products: string[]
 }>
 
 declare type Menu = Item<{
-  name: string
   recipes: string[]
   order: number
 }>
