@@ -7,9 +7,9 @@ export async function recipesUpdate(params: {
   products?: string[]
 }) {
   if(!params.name && !params.ingredients && !params.products) return
-  let recipe: any = {}
+  const recipe = {} as Recipe["data"]
   if(params.name) recipe.name = params.name
   if(params.ingredients) recipe.ingredients = params.ingredients
   if(params.products) recipe.products = params.products
-  DB(Collection.Recipes).update(params.id, recipe)
+  DB<Recipe>(Collection.Recipes).update(params.id, recipe)
 }

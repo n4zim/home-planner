@@ -11,7 +11,7 @@ export enum Collection {
 
 let db: any
 
-export default function DB(collection: Collection) {
+export default function DB<I extends Item<any>>(collection: Collection) {
   if(!db) {
     db = new Database('./data.db')
     db.pragma('journal_mode = WAL')
@@ -39,14 +39,14 @@ export default function DB(collection: Collection) {
   }
 
   return {
-    create: (data: any) => {
-      if(typeof data === "object") data = JSON.stringify(data)
+    create: (data: I["data"]) => {
+      if(typeof data === "object") data = JSON.stringify(data) as any
       const id = uuidv4()
       db.prepare(`INSERT INTO ${collection} (data, id) VALUES (?, ?)`).run(data, id)
       return id
     },
 
-    retrieveAll: (sort?: DBSort, limit?: number, page?: number) => {
+    retrieveAll: (sort?: DBSort, limit?: number, page?: number): I[] => {
       const params = Params()
       const query = `SELECT * FROM ${collection}${appendQuery(params, sort, limit, page)}`
       console.log("[QUERY]", query, params.get())
@@ -55,14 +55,14 @@ export default function DB(collection: Collection) {
 
     retrieveOne: (id: string) => {
       const result = db.prepare(`SELECT * FROM ${collection} WHERE id = ?`).get(id)
-      if(typeof result !== "undefined") return convertToItem(result)
+      if(typeof result !== "undefined") return convertToItem(result) as I
     },
 
-    update: (id: string, data: any) => {
+    update: (id: string, data: I["data"]) => {
       db.prepare(`UPDATE ${collection} SET data = json_patch(data, ?) WHERE id = ?`).run(JSON.stringify(data), id)
     },
 
-    replace: (id: string, data: any) => {
+    replace: (id: string, data: I["data"]) => {
       db.prepare(`UPDATE ${collection} SET data = ? WHERE id = ?`).run(JSON.stringify(data), id)
     },
 
@@ -75,7 +75,7 @@ export default function DB(collection: Collection) {
       sort?: DBSort,
       limit?: number,
       page?: number,
-    ): any[] => {
+    ): I[] => {
       const params = Params()
       const query = `SELECT * FROM ${collection} WHERE ${where(params.add)}${appendQuery(params, sort, limit, page)}`
       console.log("[QUERY]", query, params.get())

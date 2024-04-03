@@ -1,7 +1,7 @@
 import DB, { Collection } from "../db"
 
 export async function recipesAdd(params: { name: string }): Promise<string> {
-  return DB(Collection.Recipes).create({
+  return DB<Recipe>(Collection.Recipes).create({
     name: params.name,
     ingredients: [],
     products: [],

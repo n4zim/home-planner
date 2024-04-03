@@ -6,8 +6,8 @@ export async function menusUpdate(params: {
   recipes?: string[]
 }) {
   if(typeof params.order !== "number" && !params.recipes) return
-  let menu: any = {}
+  const menu = {} as Menu["data"]
   if(typeof params.order === "number") menu.order = params.order
   if(params.recipes) menu.recipes = params.recipes
-  DB(Collection.Menus).update(params.id, menu)
+  DB<Menu>(Collection.Menus).update(params.id, menu)
 }

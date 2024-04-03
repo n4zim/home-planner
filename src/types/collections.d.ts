@@ -1,5 +1,5 @@
 
-interface Item<Data> {
+declare interface Item<Data> {
   id: string
   data: Data
   created_at?: Date
