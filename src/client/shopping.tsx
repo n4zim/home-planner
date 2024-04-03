@@ -1,12 +1,13 @@
 import React from 'react'
-import { Section } from './sections'
+import { Context } from './context'
 
-export function Shopping(props: {
-  goToSection: (section: Section) => void
-}) {
+export function Shopping() {
+  const global = React.useContext(Context)
   return <>
+    <h2>🛍️ Shopping 🛍️</h2>
+
     <button
-      onClick={() => props.goToSection(Section.Home)}
+      onClick={() => global.goBack()}
     >
       Back
     </button>

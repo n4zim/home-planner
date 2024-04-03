@@ -3,15 +3,17 @@ import { Section } from './sections'
 import { OpenFoodFactData, getOpenFoodFactData } from './data'
 import { Scanner } from './scanner'
 import { Counter } from './counter'
+import { Context } from './context'
 
-export function Scan(props: {
-  goToSection: (section: Section) => void
-}) {
+export function Scan() {
+  const global = React.useContext(Context)
   const [data, setData] = React.useState<OpenFoodFactData | undefined>()
   return <>
+    <h2>🔎 Scan 🔎</h2>
+
     <div style={{ flexDirection: 'row' }}>
       <button
-        onClick={() => props.goToSection(Section.Home)}
+        onClick={() => global.goBack()}
       >
         Back
       </button>

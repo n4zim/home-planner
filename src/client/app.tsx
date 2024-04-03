@@ -6,28 +6,53 @@ import { Inventory } from './inventory'
 import { Shopping } from './shopping'
 import { Recipes } from './recipes'
 import { Scan } from './scan'
+import { Context } from './context'
+import { RecipeContent } from './recipe'
 
 export function App() {
-  let current = pathToSection(document.location.pathname)
-  if(current === null) {
-    current = Section.Home
-    history.replaceState({}, "", "/")
-  }
+  const [current, setCurrent] = React.useState(() => {
+    let initial = pathToSection(document.location.pathname)
+    if(initial === null) {
+      initial = { section: Section.Home }
+      history.replaceState({}, "", "/")
+    }
+    return initial
+  })
 
-  const [section, setSection] = React.useState(current)
+  React.useEffect(() => {
+    window.onpopstate = () => {
+      const section = pathToSection(document.location.pathname)
+      if(section !== null) setCurrent(section)
+    }
+  }, [])
 
-  function goToSection(section: Section) {
-    setSection(section)
-    history.replaceState({}, "", sectionToPath(section))
-  }
-
-  return <>
+  return <Context.Provider
+    value={{
+      current,
+      goTo: (section, id) => {
+        setCurrent({ section, id })
+        history.pushState({}, "", sectionToPath(section, id))
+      },
+      goBack: fallback => {
+        if(history.state) {
+          history.back()
+        } else if(fallback) {
+          setCurrent({ section: fallback })
+          history.pushState({}, "", sectionToPath(fallback))
+        } else {
+          setCurrent({ section: Section.Home })
+          history.pushState({}, "", "/")
+        }
+      },
+    }}
+  >
     <h1>🏠 Home Planner 📋</h1>
-    {section === Section.Home && <Home goToSection={goToSection}/>}
-    {section === Section.Menus && <Menus goToSection={goToSection}/>}
-    {section === Section.Inventory && <Inventory goToSection={goToSection}/>}
-    {section === Section.Shopping && <Shopping goToSection={goToSection}/>}
-    {section === Section.Recipes && <Recipes goToSection={goToSection}/>}
-    {section === Section.Scan && <Scan goToSection={goToSection}/>}
-  </>
+    {current.section === Section.Home && <Home/>}
+    {current.section === Section.Menus && <Menus/>}
+    {current.section === Section.Inventory && <Inventory/>}
+    {current.section === Section.Shopping && <Shopping/>}
+    {current.section === Section.Recipes && <Recipes/>}
+    {current.section === Section.Recipe && <RecipeContent/>}
+    {current.section === Section.Scan && <Scan/>}
+  </Context.Provider>
 }

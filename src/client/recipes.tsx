@@ -3,18 +3,20 @@ import { Section } from './sections'
 import { recipesAll } from '../server/recipes/all'
 import { recipesAdd } from '../server/recipes/add'
 import { recipesUpdate } from '../server/recipes/update'
+import { Context } from './context'
 
-export function Recipes(props: {
-  goToSection: (section: Section) => void
-}) {
+export function Recipes() {
+  const global = React.useContext(Context)
   const [data, setData] = React.useState<Recipe[]>([])
   React.useEffect(() => {
     recipesAll().then(setData)
   }, [])
   return <>
+    <h2>🍲 Recipes 🍲</h2>
+
     <div style={{ flexDirection: "row" }}>
       <button
-        onClick={() => props.goToSection(Section.Home)}
+        onClick={() => global.goBack()}
       >
         Back
       </button>
@@ -36,29 +38,12 @@ export function Recipes(props: {
     </div>
 
     <div style={{ width: "100%", alignItems: "stretch" }}>
-      {data.map((recipe, index) => <div
+      {data.map(recipe => <div
         key={recipe.id}
-        style={{ border: "1px solid black", flexGrow: 1, margin: 10 }}
+        style={{ border: "1px solid black", flexGrow: 1, margin: 10, cursor: "pointer" }}
+        onClick={() => global.goTo(Section.Recipe, recipe.id)}
       >
-        <div style={{ flexDirection: "row" }}>
-          <span
-            style={{ marginRight: 5, cursor: "pointer" }}
-            onClick={() => {
-              const name = prompt("New menu name", recipe.data.name)
-              if(name) {
-                recipesUpdate({ id: recipe.id, name })
-                setData(data.map(item => item.id === recipe.id ? {
-                  ...item,
-                  data: { ...item.data, name },
-                } : item).sort((a, b) => a.data.name.localeCompare(b.data.name)))
-              }
-            }}
-          >
-            ✏️
-          </span>
-
-          {recipe.data.name}
-        </div>
+        {recipe.data.name}
       </div>)}
     </div>
   </>

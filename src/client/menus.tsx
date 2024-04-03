@@ -1,13 +1,13 @@
 import React from 'react'
 import Select from 'react-select'
-import { Section } from './sections'
 import { menusAdd } from '../server/menus/add'
 import { menusAll } from '../server/menus/all'
 import { menusUpdate } from '../server/menus/update'
+import { Context } from './context'
+import { Section } from './sections'
 
-export function Menus(props: {
-  goToSection: (section: Section) => void
-}) {
+export function Menus() {
+  const global = React.useContext(Context)
   const [data, setData] = React.useState<MenusAllData>({
     menus: [],
     recipes: {},
@@ -16,9 +16,11 @@ export function Menus(props: {
     menusAll().then(setData)
   }, [])
   return <>
+    <h2>🍽️ Menus 🍽️</h2>
+
     <div style={{ flexDirection: "row" }}>
       <button
-        onClick={() => props.goToSection(Section.Home)}
+        onClick={() => global.goBack()}
       >
         Back
       </button>
@@ -112,6 +114,17 @@ export function Menus(props: {
             })
           }}
         />
+
+        {menu.data.recipes.length !== 0 && <p>
+          Links: {menu.data.recipes.map((recipe, index) => <span
+            key={index}
+            style={{ cursor: "pointer" }}
+            onClick={() => global.goTo(Section.Recipe, recipe)}
+          >
+            {data.recipes[recipe]}
+            {index < menu.data.recipes.length - 1 && ", "}
+          </span>)}
+        </p>}
       </div>)}
     </div>
   </>

@@ -49,7 +49,7 @@ export default function DB<I extends Item<any>>(collection: Collection) {
     retrieveAll: (sort?: DBSort, limit?: number, page?: number): I[] => {
       const params = Params()
       const query = `SELECT * FROM ${collection}${appendQuery(params, sort, limit, page)}`
-      console.log("[QUERY]", query, params.get())
+      //console.log("[QUERY]", query, params.get())
       return db.prepare(query).all(params.get()).map(convertToItem)
     },
 
@@ -78,7 +78,7 @@ export default function DB<I extends Item<any>>(collection: Collection) {
     ): I[] => {
       const params = Params()
       const query = `SELECT * FROM ${collection} WHERE ${where(params.add)}${appendQuery(params, sort, limit, page)}`
-      console.log("[QUERY]", query, params.get())
+      //console.log("[QUERY]", query, params.get())
       return db.prepare(query).all(params.get()).map(convertToItem)
     },
 
@@ -89,7 +89,7 @@ export default function DB<I extends Item<any>>(collection: Collection) {
       let query = `SELECT count(*) as count FROM ${collection}`
       if(typeof where !== "undefined") {
         query += ` WHERE ${where(params.add)}`
-        console.log("[QUERY]", query, params.get())
+        //console.log("[QUERY]", query, params.get())
       }
       return db.prepare(query).get(params.get()).count
     }
