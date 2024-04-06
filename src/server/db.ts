@@ -58,7 +58,7 @@ export default function DB<I extends Item<any>>(collection: Collection) {
       if(typeof result !== "undefined") return convertToItem(result) as I
     },
 
-    update: (id: string, data: I["data"]) => {
+    update: (id: string, data: Partial<I["data"]>) => {
       db.prepare(`UPDATE ${collection} SET data = json_patch(data, ?) WHERE id = ?`).run(JSON.stringify(data), id)
     },
 

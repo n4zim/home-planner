@@ -5,6 +5,7 @@ import { menusAll } from '../server/menus/all'
 import { menusUpdate } from '../server/menus/update'
 import { Context } from './context'
 import { Section } from './sections'
+import { menusArchive } from '../server/menus/archive'
 
 export function Menus() {
   const global = React.useContext(Context)
@@ -94,6 +95,20 @@ export function Menus() {
           >
             ⬇️
           </span>}
+
+          <span
+            style={{ marginLeft: 10, cursor: "pointer" }}
+            onClick={() => {
+              menusArchive({ id: menu.id }).then(() => {
+                setData({
+                  ...data,
+                  menus: data.menus.filter(item => item.id !== menu.id),
+                })
+              })
+            }}
+          >
+            ☑️
+          </span>
         </div>
 
         <Select isMulti className='select'

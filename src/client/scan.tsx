@@ -1,13 +1,13 @@
 import React from 'react'
-import { Section } from './sections'
-import { OpenFoodFactData, getOpenFoodFactData } from './data'
 import { Scanner } from './scanner'
 import { Counter } from './counter'
 import { Context } from './context'
+import { productsRetrieve } from '../server/products/retrieve'
+import { inventorySet } from '../server/inventory/set'
 
 export function Scan() {
   const global = React.useContext(Context)
-  const [data, setData] = React.useState<OpenFoodFactData | undefined>()
+  const [product, setProduct] = React.useState<Product | undefined>()
   return <>
     <h2>🔎 Scan 🔎</h2>
 
@@ -18,41 +18,41 @@ export function Scan() {
         Back
       </button>
 
-      {data && <button
-        onClick={() => setData(undefined)}
+      {product && <button
+        onClick={() => setProduct(undefined)}
         style={{ marginLeft: 10 }}
       >
         Scan another product
       </button>}
     </div>
 
-    {(data && <div style={{
+    {(product && <div style={{
       paddingLeft: 20,
       paddingRight: 20,
+      marginTop: 20,
     }}>
-      <h2>{data.name}</h2>
+      <h2>{product.data.name}</h2>
 
-      {data.image && <img src={data.image} alt={data.name}/>}
+      {product.data.image && <img src={product.data.image} alt={product.data.name}/>}
 
       <h3>Inventory</h3>
 
       <Counter
-        onValueChange={quantity => {
-          alert(`Quantity updated to ${quantity} for ${data.barcode}`)
-        }}
+        value={product.data.inventory}
+        onValueChange={quantity => inventorySet({ product: product.id, quantity })}
       />
 
       <h3>Data</h3>
 
-      {data.quantity && <p>Quantity: {data.quantity}</p>}
-      {data.nutriscore && <p>Nutriscore: {data.nutriscore}</p>}
-      {data.ecoscore && <p>Ecoscore: {data.ecoscore}</p>}
-      {data.conservation && <p>Conservation: {data.conservation}</p>}
-      {data.stores.length !== 0 && <p>Stores: {data.stores.join(", ")}</p>}
+      {product.data.quantity && <p>Quantity: {product.data.quantity.amount} {product.data.quantity.unit}</p>}
+      {product.data.nutriscore && <p>Nutriscore: {product.data.nutriscore}</p>}
+      {product.data.ecoscore && <p>Ecoscore: {product.data.ecoscore}</p>}
+      {product.data.conservation && <p>Conservation: {product.data.conservation}</p>}
+      {(product.data.stores && product.data.stores.length !== 0) && <p>Stores: {product.data.stores.join(", ")}</p>}
     </div>) || (
       <div style={{ marginTop: 20 }}>
         <Scanner
-          onScan={barcode => getOpenFoodFactData(barcode).then(setData)}
+          onScan={barcode => productsRetrieve({ barcode }).then(setProduct)}
         />
       </div>
     )}
