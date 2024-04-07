@@ -65,7 +65,12 @@ export function Scan() {
           control: styles => ({ ...styles, width: "100%", margin: 20 }),
         }}
         options={Object.values(data.ingredients).map(ingredient => ({ value: ingredient.id, label: ingredient.data.name }))}
-        value={{ value: data.product.data.ingredient, label: data.ingredients[data.product.data.ingredient!].data.name }}
+        value={
+          data.product.data.ingredient && {
+            value: data.product.data.ingredient,
+            label: data.ingredients[data.product.data.ingredient].data.name
+          } || undefined
+        }
         onChange={ingredient => {
           if(!ingredient?.value) return
           productsSetIngredient({ id: data.product.id, ingredient: ingredient.value })

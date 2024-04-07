@@ -15,6 +15,11 @@ import { App } from './app'
 
 /* DEV_ONLY_START */
 new WebSocket("ws://localhost:2000").onmessage = () => window.location.reload()
+
+/*console.log = (...params: any[]) => {
+  console.debug(...params)
+  alert("LOG: " + JSON.stringify(params))
+}*/
 /* DEV_ONLY_END */
 
 let root = document.getElementById("root")
