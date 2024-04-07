@@ -4,15 +4,18 @@ declare type MenusAllData = {
   recipes: { [key: string]: string }
 }
 
-declare type InventoryAllData = ({
+declare type InventoryAllData = {
   name: string
-} & ({
   ingredient: string
-  quantity: number
-} | {
-  products: {
+  quantity?: number
+  products?: {
     name: string
     image?: string
     quantity: number
   }[]
-}))[]
+}
+
+declare type ScanData = {
+  product: Product
+  ingredients: { [id: string]: Ingredient }
+}

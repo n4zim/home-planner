@@ -10,6 +10,5 @@ export async function recipesUpdate(params: {
   const recipe = {} as Recipe["data"]
   if(params.name) recipe.name = params.name
   if(params.ingredients) recipe.ingredients = params.ingredients
-  if(params.products) recipe.products = params.products
   DB<Recipe>(Collection.Recipes).update(params.id, recipe)
 }

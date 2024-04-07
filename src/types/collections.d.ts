@@ -7,11 +7,11 @@ declare interface Item<Data> {
 }
 
 declare type Product = Item<{
+  ingredient?: string
   name: string
   image?: string
   barcode: string
-  quantity: { amount: number, unit: "g" | "l" | "piece" }
-  ingredient?: string
+  quantity?: { amount: number, unit: "g" | "l" | "piece" }
   stores?: string[]
   conservation?: string
   nutriscore?: string

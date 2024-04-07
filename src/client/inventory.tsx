@@ -1,10 +1,18 @@
 import React from 'react'
 import { Context } from './context'
 import { Section } from './sections'
+import { inventoryAll } from '../server/inventory/all'
+import { ingredientsAdd } from '../server/ingredients/add'
 
 export function Inventory() {
   const global = React.useContext(Context)
-  const [data, setData] = React.useState<Recipe[]>([])
+
+  const [data, setData] = React.useState<InventoryAllData[] | undefined>()
+
+  React.useEffect(() => {
+    inventoryAll().then(setData)
+  }, [])
+
   return <>
     <h2>📦 Inventory 📦</h2>
 
@@ -17,20 +25,29 @@ export function Inventory() {
 
       <button
         style={{ marginLeft: 10 }}
-        onClick={() => {}}
+        onClick={() => {
+          const name = prompt("Enter the name of the ingredient")
+          if(name) {
+            ingredientsAdd({ name }).then(id => {
+              setData([
+                ...(data || []),
+                { name, ingredient: id }
+              ].sort((a, b) => a.name.localeCompare(b.name)))
+            })
+          }
+        }}
       >
         Add a new ingredient
       </button>
     </div>
 
-    <div style={{ width: "100%", alignItems: "stretch" }}>
-      {data.map(recipe => <div
-        key={recipe.id}
-        style={{ border: "1px solid black", flexGrow: 1, margin: 10, cursor: "pointer" }}
-        onClick={() => global.goTo(Section.Recipe, recipe.id)}
+    {data && <div style={{ width: "100%", alignItems: "stretch" }}>
+      {data.map(item => <div
+        key={item.ingredient}
+        style={{ border: "1px solid black", flexGrow: 1, margin: 10 }}
       >
-        {recipe.data.name}
+        {item.name} ({item.quantity})
       </div>)}
-    </div>
+    </div>}
   </>
 }
