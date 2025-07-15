@@ -13,7 +13,7 @@ let db: any
 
 export default function DB<I extends Item<any>>(collection: Collection) {
   if(!db) {
-    db = new Database('./data.db')
+    db = new Database('./persistent/data.db')
     db.pragma('journal_mode = WAL')
 
     const tables = db
