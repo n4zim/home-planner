@@ -1,11 +1,11 @@
 import React from 'react'
 import Select from 'react-select'
-import { menusAdd } from '../server/menus/add'
-import { menusAll } from '../server/menus/all'
-import { menusUpdate } from '../server/menus/update'
-import { Context } from './context'
-import { Section } from './sections'
-import { menusArchive } from '../server/menus/archive'
+import { menusAdd } from '../../server/menus/add'
+import { menusAll } from '../../server/menus/all'
+import { menusUpdate } from '../../server/menus/update'
+import { Context } from '../context'
+import { Route } from '../routes'
+import { menusArchive } from '../../server/menus/archive'
 
 export function Menus() {
   const global = React.useContext(Context)
@@ -134,7 +134,7 @@ export function Menus() {
           Links: {menu.data.recipes.map((recipe, index) => <span
             key={index}
             style={{ cursor: "pointer" }}
-            onClick={() => global.goTo(Section.Recipe, recipe)}
+            onClick={() => global.goTo(Route.Recipe, recipe)}
           >
             {data.recipes[recipe]}
             {index < menu.data.recipes.length - 1 && ", "}

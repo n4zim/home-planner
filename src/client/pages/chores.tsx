@@ -1,17 +1,15 @@
 import React from 'react'
-import { Context } from './context'
+import { Context } from '../context'
 
-export function Shopping() {
+export function Chores() {
   const global = React.useContext(Context)
   return <>
-    <h2>🛍️ Shopping 🛍️</h2>
+    <h2>🧹 Chores 🧹</h2>
 
     <button
       onClick={() => global.goBack()}
     >
       Back
     </button>
-
-    <h2></h2>
   </>
 }

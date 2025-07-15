@@ -1,10 +1,10 @@
 import React from 'react'
-import { Section } from './sections'
-import { recipesAll } from '../server/recipes/all'
-import { recipesAdd } from '../server/recipes/add'
-import { recipesUpdate } from '../server/recipes/update'
-import { Context } from './context'
-import { recipesGet } from '../server/recipes/get'
+import { Route } from '../routes'
+import { recipesAll } from '../../server/recipes/all'
+import { recipesAdd } from '../../server/recipes/add'
+import { recipesUpdate } from '../../server/recipes/update'
+import { Context } from '../context'
+import { recipesGet } from '../../server/recipes/get'
 
 export function RecipeContent() {
   const global = React.useContext(Context)
@@ -23,7 +23,7 @@ export function RecipeContent() {
 
     <div style={{ flexDirection: "row" }}>
       <button
-        onClick={() => global.goBack(Section.Recipes)}
+        onClick={() => global.goBack(Route.Recipes)}
       >
         Back
       </button>

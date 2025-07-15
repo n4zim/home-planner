@@ -1,19 +1,20 @@
 import React from 'react'
-import { Section, pathToSection, sectionToPath } from './sections'
-import { Home } from './home'
-import { Menus } from './menus'
-import { Inventory } from './inventory'
-import { Shopping } from './shopping'
-import { Recipes } from './recipes'
-import { Scan } from './scan'
+import { Route, pathToRoute, routeToPath } from './routes'
+import { Home } from './pages/home'
+import { Menus } from './pages/menus'
+import { Inventory } from './pages/inventory'
+import { Shopping } from './pages/shopping'
+import { Recipes } from './pages/recipes'
+import { Scan } from './pages/scan'
 import { Context } from './context'
-import { RecipeContent } from './recipe'
+import { RecipeContent } from './pages/recipe'
+import { Chores } from './pages/chores'
 
 export function App() {
   const [current, setCurrent] = React.useState(() => {
-    let initial = pathToSection(document.location.pathname)
+    let initial = pathToRoute(document.location.pathname)
     if(initial === null) {
-      initial = { section: Section.Home }
+      initial = { route: Route.Home }
       history.replaceState({}, "", "/")
     }
     return initial
@@ -21,8 +22,8 @@ export function App() {
 
   React.useEffect(() => {
     window.onpopstate = () => {
-      const section = pathToSection(document.location.pathname)
-      if(section !== null) setCurrent(section)
+      const route = pathToRoute(document.location.pathname)
+      if(route !== null) setCurrent(route)
     }
   }, [])
 
@@ -30,29 +31,30 @@ export function App() {
     value={{
       current,
       goTo: (section, id) => {
-        setCurrent({ section, id })
-        history.pushState({}, "", sectionToPath(section, id))
+        setCurrent({ route: section, id })
+        history.pushState({}, "", routeToPath(section, id))
       },
       goBack: fallback => {
         if(history.state) {
           history.back()
         } else if(fallback) {
-          setCurrent({ section: fallback })
-          history.pushState({}, "", sectionToPath(fallback))
+          setCurrent({ route: fallback })
+          history.pushState({}, "", routeToPath(fallback))
         } else {
-          setCurrent({ section: Section.Home })
+          setCurrent({ route: Route.Home })
           history.pushState({}, "", "/")
         }
       },
     }}
   >
     <h1>🏠 Home Planner 📋</h1>
-    {current.section === Section.Home && <Home/>}
-    {current.section === Section.Menus && <Menus/>}
-    {current.section === Section.Inventory && <Inventory/>}
-    {current.section === Section.Shopping && <Shopping/>}
-    {current.section === Section.Recipes && <Recipes/>}
-    {current.section === Section.Recipe && <RecipeContent/>}
-    {current.section === Section.Scan && <Scan/>}
+    {current.route === Route.Home && <Home/>}
+    {current.route === Route.Chores && <Chores/>}
+    {current.route === Route.Menus && <Menus/>}
+    {current.route === Route.Inventory && <Inventory/>}
+    {current.route === Route.Shopping && <Shopping/>}
+    {current.route === Route.Recipes && <Recipes/>}
+    {current.route === Route.Recipe && <RecipeContent/>}
+    {current.route === Route.Scan && <Scan/>}
   </Context.Provider>
 }

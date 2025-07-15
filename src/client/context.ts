@@ -1,12 +1,12 @@
 import React from "react"
-import { Section } from "./sections"
+import { Route } from "./routes"
 
 export const Context = React.createContext<{
-  current: { section: Section; id?: string }
-  goTo: (section: Section, id?: string) => void
-  goBack: (fallback?: Section) => void
+  current: { route: Route; id?: string }
+  goTo: (route: Route, id?: string) => void
+  goBack: (fallback?: Route) => void
 }>({
-  current: { section: Section.Home },
+  current: { route: Route.Home },
   goTo: () => {},
   goBack: () => {},
 })

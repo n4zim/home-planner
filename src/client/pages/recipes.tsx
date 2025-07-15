@@ -1,9 +1,9 @@
 import React from 'react'
-import { Section } from './sections'
-import { recipesAll } from '../server/recipes/all'
-import { recipesAdd } from '../server/recipes/add'
-import { recipesUpdate } from '../server/recipes/update'
-import { Context } from './context'
+import { Route } from '../routes'
+import { recipesAll } from '../../server/recipes/all'
+import { recipesAdd } from '../../server/recipes/add'
+import { recipesUpdate } from '../../server/recipes/update'
+import { Context } from '../context'
 
 export function Recipes() {
   const global = React.useContext(Context)
@@ -41,7 +41,7 @@ export function Recipes() {
       {data.map(recipe => <div
         key={recipe.id}
         style={{ border: "1px solid black", flexGrow: 1, margin: 10, cursor: "pointer" }}
-        onClick={() => global.goTo(Section.Recipe, recipe.id)}
+        onClick={() => global.goTo(Route.Recipe, recipe.id)}
       >
         {recipe.data.name}
       </div>)}

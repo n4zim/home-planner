@@ -1,12 +1,12 @@
 import React from 'react'
-import { Scanner } from './scanner'
-import { Counter } from './counter'
-import { Context } from './context'
-import { productsScan } from '../server/products/scan'
-import { inventorySet } from '../server/inventory/set'
+import { Scanner } from '../scanner'
+import { Counter } from '../counter'
+import { Context } from '../context'
+import { productsScan } from '../../server/products/scan'
+import { inventorySet } from '../../server/inventory/set'
 import Select from 'react-select'
-import { productsSetIngredient } from '../server/products/setIngredient'
-import { ingredientsAdd } from '../server/ingredients/add'
+import { productsSetIngredient } from '../../server/products/setIngredient'
+import { ingredientsAdd } from '../../server/ingredients/add'
 
 export function Scan() {
   const global = React.useContext(Context)

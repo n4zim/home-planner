@@ -1,8 +1,8 @@
 import React from 'react'
-import { Context } from './context'
-import { Section } from './sections'
-import { inventoryAll } from '../server/inventory/all'
-import { ingredientsAdd } from '../server/ingredients/add'
+import { Context } from '../context'
+import { Route } from '../routes'
+import { inventoryAll } from '../../server/inventory/all'
+import { ingredientsAdd } from '../../server/ingredients/add'
 
 export function Inventory() {
   const global = React.useContext(Context)
