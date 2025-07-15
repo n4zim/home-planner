@@ -3,29 +3,29 @@
   "version": "1.0.0",
   "repository": "git@github.com:n4zim/home-planner.git",
   "license": "Apache-2.0",
-  "author": "Nazim Lachter <nazim@blueforest.cc>",
+  "author": "Nazim Lachter <nazim@blueforest.tech>",
   "scripts": {
     "start": "./esbuild.js start",
     "build": "./esbuild.js build"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.9",
-    "@types/node": "^20.11.30",
-    "@types/react": "^18.2.73",
-    "@types/react-dom": "^18.2.23",
-    "@types/uuid": "^9.0.8",
-    "@types/ws": "^8.5.10",
-    "chokidar": "^3.6.0",
-    "esbuild": "^0.20.2",
-    "typescript": "^5.4.3",
-    "ws": "^8.16.0"
+    "@types/better-sqlite3": "^7.6",
+    "@types/node": "^24",
+    "@types/react": "^19.1",
+    "@types/react-dom": "^19.1",
+    "@types/uuid": "^10.0",
+    "@types/ws": "^8.18",
+    "chokidar": "^4.0",
+    "esbuild": "^0.25",
+    "typescript": "^5.8",
+    "ws": "^8.18"
   },
   "dependencies": {
-    "better-sqlite3": "^9.4.3",
-    "html5-qrcode": "^2.3.8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-select": "^5.8.0",
-    "uuid": "^9.0.1"
+    "better-sqlite3": "^12.2",
+    "html5-qrcode": "^2.3",
+    "react": "^19.1",
+    "react-dom": "^19.1",
+    "react-select": "^5.10",
+    "uuid": "^11.1"
   }
 }
