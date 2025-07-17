@@ -2,6 +2,7 @@ import Database from 'better-sqlite3'
 import { v4 as uuidv4 } from "uuid"
 
 export enum Collection {
+  Chores = "chores",
   Products = "products",
   Inventory = "inventory",
   Ingredients = "ingredients",
@@ -21,6 +22,9 @@ export default function DB<I extends Item<any>>(collection: Collection) {
       .all()
       .map((table: { name: string }) => table.name)
 
+    if(!tables.includes(Collection.Chores)) {
+      db.prepare(createTableQuery(Collection.Chores)).run()
+    }
     if(!tables.includes(Collection.Products)) {
       db.prepare(createTableQuery(Collection.Products)).run()
     }

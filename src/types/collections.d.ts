@@ -43,3 +43,10 @@ declare type Menu = Item<{
   order: number
   archived?: number
 }>
+
+declare type Chore = Item<{
+  text: string
+  assignment?: string
+  completed?: Date | null
+  order: number
+}>
