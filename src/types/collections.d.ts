@@ -43,3 +43,9 @@ declare type Menu = Item<{
   order: number
   archived?: number
 }>
+
+declare type Chore = Item<{
+  title: string
+  description?: string
+  done: boolean
+}>

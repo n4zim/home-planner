@@ -7,6 +7,7 @@ export enum Collection {
   Ingredients = "ingredients",
   Recipes = "recipes",
   Menus = "menus",
+  Chores = "chores",
 }
 
 let db: any
@@ -35,6 +36,9 @@ export default function DB<I extends Item<any>>(collection: Collection) {
     }
     if(!tables.includes(Collection.Menus)) {
       db.prepare(createTableQuery(Collection.Menus)).run()
+    }
+    if(!tables.includes(Collection.Chores)) {
+      db.prepare(createTableQuery(Collection.Chores)).run()
     }
   }
 
